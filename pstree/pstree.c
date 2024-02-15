@@ -67,7 +67,7 @@ void printPid(char* pid){
 		
 		// printf("%s  ", entry->d_name);
 	}
-	close(fp);
+	fclose(fp);
 	// printf("\t|-------------------------------|\n");
 	// printf("father\n");
 

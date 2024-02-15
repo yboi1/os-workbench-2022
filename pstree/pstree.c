@@ -93,7 +93,7 @@ int Pstree(int pid, int num_sort, int version){
 	}
 
 
-	close(dir);
+	fclose(dir);
 }	
 
 int main(int argc, char* argv[]){

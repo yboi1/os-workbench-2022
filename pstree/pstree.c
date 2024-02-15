@@ -67,7 +67,7 @@ void printPid(char* pid){
 		
 		// printf("%s  ", entry->d_name);
 	}
-	fclose(fp);
+	// fclose(fp);
 	// printf("\t|-------------------------------|\n");
 	// printf("father\n");
 
@@ -93,7 +93,7 @@ int Pstree(int pid, int num_sort, int version){
 	}
 
 
-	fclose(dir);
+	// fclose(dir);
 }	
 
 int main(int argc, char* argv[]){

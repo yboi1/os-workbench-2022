@@ -99,7 +99,7 @@ void co_yield() {
 
 
   if(tmp->val.status==co_RUNNING){
-    tmp->val.status = co_wait;
+    tmp->val.status = co_WAITING;
 
     List* find_p = coList;
     // 找到可以切换的协程
@@ -107,7 +107,7 @@ void co_yield() {
       find_p = find_p->next;
     }
 
-    tmp->val.waiter = find_p;
+    tmp->val.waiter = &(find_p->val);
     find_p->val.status=co_RUNNING;
     
     setjmp(tmp->val.context);

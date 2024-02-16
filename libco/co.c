@@ -46,7 +46,8 @@ struct co *co_start(const char *name, void (*func)(void *), void *arg) {
     return NULL;
   }
   struct co* New = (struct co*)malloc(sizeof(struct co));
-  New->name = name;
+  strcpy(New->name, name);
+  // New->name = name;
   New->func = func;
   New->arg = arg;
   New->status = co_NEW;

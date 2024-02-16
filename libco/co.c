@@ -30,7 +30,7 @@ struct co {
 
 // 维护一个链表表示目前存有的协程
 typedef struct ListNode{
-  struct co val;
+  struct co* val;
   struct ListNode* next;
 
   int num;
@@ -56,7 +56,9 @@ struct co *co_start(const char *name, void (*func)(void *), void *arg) {
   while(tmp->next != NULL){
     tmp=tmp->next;
   }  
-  tmp->next = New;
+  List *add_list = (List *)malloc(sizeof(List));
+  add_list->val = New;
+  tmp->next = add_list;
 
   return New;
 }
@@ -67,18 +69,22 @@ void co_wait(struct co *co) {
   co->func(co->arg);
   co->status = co_DEAD;
 
-  if(!strcmp(coList->val.name,co->name)){
+  List* del;
+  if(!strcmp(coList->val->name,co->name)){
     coList=coList->next;
   }
   else{
     List* tmp = coList;
-    while(!strcmp(tmp->next->val.name, co->name)){
+    while(!strcmp(tmp->next->val->name, co->name)){
       tmp=tmp->next;
     }  
+    del = tmp->next;
     tmp->next = tmp->next->next;
-  }
 
+  }
+  free(del);
   free(co);
+  
   //  将协程释放并移除列表
 }
 
@@ -94,27 +100,27 @@ void co_yield() {
 
   // 找到当前执行的协程
   List* tmp = coList;
-  while(tmp->next!=NULL && tmp->val.status!=co_RUNNING){
+  while(tmp->next!=NULL && tmp->val->status!=co_RUNNING){
     tmp = tmp->next;
   }
   
 
 
-  if(tmp->val.status==co_RUNNING){
-    tmp->val.status = co_WAITING;
+  if(tmp->val->status==co_RUNNING){
+    tmp->val->status = co_WAITING;
 
     List* find_p = coList;
     // 找到可以切换的协程
-    while(find_p->next!=NULL && find_p->val.status!=co_DEAD && find_p->val.status!=co_RUNNING){
+    while(find_p->next!=NULL && find_p->val->status!=co_DEAD && find_p->val->status!=co_RUNNING){
       find_p = find_p->next;
     }
 
-    tmp->val.waiter = &(find_p->val);
-    find_p->val.status=co_RUNNING;
+    tmp->val->waiter = &(find_p->val);
+    find_p->val->status=co_RUNNING;
     
-    setjmp(tmp->val.context);
+    setjmp(tmp->val->context);
 
-    longjmp(find_p->val.context,  1);
+    longjmp(find_p->val->context,  1);
     
   }
 

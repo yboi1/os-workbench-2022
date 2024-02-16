@@ -32,7 +32,6 @@ struct co {
 typedef struct ListNode{
   struct co* val;
   struct ListNode* next;
-
   int num;
 }List;
 
@@ -41,7 +40,7 @@ List* coList;
 
 // 创建一个新的协程   只是创建，不会立即执行任务
 struct co *co_start(const char *name, void (*func)(void *), void *arg) {
-  if(coList->num > MAX_NUM){
+  if(coList!=NULL && coList->num > MAX_NUM){
     printf("List size is too more\n");
     return NULL;
   }
@@ -59,6 +58,7 @@ struct co *co_start(const char *name, void (*func)(void *), void *arg) {
   List *add_list = (List *)malloc(sizeof(List));
   add_list->val = New;
   tmp->next = add_list;
+  coList->num++;
 
   return New;
 }
@@ -69,7 +69,7 @@ void co_wait(struct co *co) {
   co->func(co->arg);
   co->status = co_DEAD;
 
-  List* del;
+  // List* del;
   if(!strcmp(coList->val->name,co->name)){
     coList=coList->next;
   }
@@ -78,12 +78,13 @@ void co_wait(struct co *co) {
     while(!strcmp(tmp->next->val->name, co->name)){
       tmp=tmp->next;
     }  
-    del = tmp->next;
+    // del = tmp->next;
     tmp->next = tmp->next->next;
 
   }
-  free(del);
+  // free(del);
   free(co);
+  coList->num--;
   
   //  将协程释放并移除列表
 }
@@ -115,7 +116,7 @@ void co_yield() {
       find_p = find_p->next;
     }
 
-    tmp->val->waiter = &(find_p->val);
+    tmp->val->waiter = find_p->val;
     find_p->val->status=co_RUNNING;
     
     setjmp(tmp->val->context);

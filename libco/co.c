@@ -16,7 +16,7 @@ enum co_status{
 };
 
 struct co {
-  char *name;
+  char name[10];
   void(*func)(void *);
   void *arg;
 

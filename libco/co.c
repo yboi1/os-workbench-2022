@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <setjmp.h>
 #include <stdint.h>
+#include <string.h>
 
 #define STACK_SIZE 4096
 #define MAX_NUM 26

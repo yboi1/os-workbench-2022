@@ -99,6 +99,7 @@ struct co *co_start(const char *name, void (*func)(void *), void *arg) {
   return New;
 }
 
+// 实现当前协程的执行和状态的变化
 void wrapper(){
   co_current->status = CO_RUNNING;
   co_current->func(co_current->arg);

@@ -79,8 +79,8 @@ __attribute__((constructor)) void co_init() {
 // 创建一个新的协程   只是创建，不会立即执行任务
 struct co *co_start(const char *name, void (*func)(void *), void *arg) {
   struct co* New = (struct co*)malloc(sizeof(struct co));
-  strcpy(New->name, name);
-  // New->name = name;
+  // strcpy(New->name, name);
+  New->name = name;
   New->func = func;
   New->arg = arg;
   New->status = CO_NEW;

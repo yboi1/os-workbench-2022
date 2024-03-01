@@ -4,6 +4,7 @@
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
+// 添加到哪里？
 // 返回字符串长度
 size_t strlen(const char *s) {  
   size_t str_Len = 0;
